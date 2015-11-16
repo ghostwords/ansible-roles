@@ -1,0 +1,21 @@
+---
+
+- name: Install Nginx
+  apt: name=nginx state=installed
+
+- name: Copy mime.types
+  template: src=mime.types.j2 dest=/etc/nginx/mime.types.h5bp
+  notify:
+   - reload Nginx
+
+- name: Copy Nginx base config
+  template: src=nginx/nginx.conf.j2 dest=/etc/nginx/nginx.conf
+  notify:
+   - reload Nginx
+
+- name: Test Nginx configuration
+  shell: "nginx -t"
+  register: result
+  # TODO failed_when?
+  changed_when: "result.rc != 0"
+  always_run: yes
