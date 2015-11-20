@@ -1,0 +1,17 @@
+---
+
+- name: Import InfluxDB package signing key
+  apt_key:
+    url: https://repos.influxdata.com/influxdb.key
+    state: present
+
+- name: Add InfluxDB package repository
+  apt_repository:
+    repo: 'deb [arch=amd64] https://repos.influxdata.com/ubuntu trusty stable'
+    state: present
+
+- name: Install InfluxDB
+  apt: name=influxdb state=present
+
+- name: Start InfluxDB
+  service: name=influxdb state=started

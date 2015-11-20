@@ -1,0 +1,9 @@
+---
+grafana_security_admin_password: admin
+grafana_security_admin_user: admin
+grafana_security_secret_key: SW2YcwTIb9zpOOhoPsMm
+grafana_server_cert_file: /etc/grafana/grafana.crt
+grafana_server_cert_key: /etc/grafana/grafana.key
+grafana_server_domain: localhost
+grafana_server_http_port: 3000
+grafana_smtp_from_address: admin@grafana.localhost

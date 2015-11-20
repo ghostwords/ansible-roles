@@ -1,0 +1,53 @@
+---
+
+- name: Import Package Cloud package signing key
+  apt_key:
+    url: https://packagecloud.io/gpg.key
+    state: present
+
+- name: Add Grafana package repository
+  apt_repository:
+    repo: 'deb https://packagecloud.io/grafana/stable/debian/ wheezy main'
+    state: present
+
+- name: Install Grafana
+  apt: name=grafana state=present
+
+- name: Copy Grafana config
+  template:
+    src: grafana.ini.j2
+    dest: /etc/grafana/grafana.ini
+    owner: root
+    group: grafana
+    mode: 0640
+  notify:
+    - restart Grafana
+
+# TODO indicate dependency on nginx role?
+# TODO factor out SSL block (into nginx role)?
+# TODO take care of dhparams.pem generation, when missing: openssl dhparam -out dhparams.pem 2048
+# TODO take care of cert_file and cert_key generation, when missing
+- name: Copy Grafana Nginx config
+  template:
+    src: nginx.j2
+    dest: /etc/nginx/sites-available/{{ grafana_server_domain }}
+  notify:
+   - reload Nginx
+
+- name: Activate Grafana Nginx config
+  file:
+    state: link
+    src: /etc/nginx/sites-available/{{ grafana_server_domain }}
+    path: /etc/nginx/sites-enabled/{{ grafana_server_domain }}
+  notify:
+   - reload Nginx
+
+- name: Test Nginx configuration
+  shell: "nginx -t"
+  register: result
+  # TODO failed_when?
+  changed_when: "result.rc != 0"
+  always_run: yes
+
+- name: Configure Grafana to start at boot time
+  service: name=grafana-server enabled=yes
