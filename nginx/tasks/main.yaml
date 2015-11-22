@@ -13,6 +13,20 @@
   notify:
    - reload Nginx
 
+- name: Copy Nginx SSL config
+  template: src=ssl.conf.j2 dest=/etc/nginx/ssl.conf
+  notify:
+   - reload Nginx
+
+- name: Generate a strong Diffie-Hellman group
+  command: openssl dhparam -out /etc/nginx/dhparams.pem 2048
+    creates=/etc/nginx/dhparams.pem
+  notify: reload Nginx
+
+- name: Ensure appropriate DH group file ownership/permissions
+  file: path=/etc/nginx/dhparams.pem owner=root group=root mode=0640 state=file
+  notify: reload Nginx
+
 - name: Test Nginx configuration
   shell: "nginx -t"
   register: result
