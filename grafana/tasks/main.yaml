@@ -42,7 +42,6 @@
     creates={{ grafana_server_cert_file }}
   notify: reload Nginx
 
-# TODO indicate dependency on nginx role?
 - name: Copy Grafana Nginx config
   template:
     src: nginx.j2
