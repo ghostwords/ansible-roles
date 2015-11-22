@@ -23,6 +23,20 @@
   notify:
     - restart Grafana
 
+- name: Install passlib Python library (for htpasswd Ansible module)
+  apt: name=python-passlib state=present
+
+- name: Generate password file for Nginx basic authentication
+  htpasswd:
+    path: "{{ grafana_auth_basic_user_file }}"
+    name: "{{ grafana_auth_basic_user }}"
+    password: "{{ grafana_auth_basic_password }}"
+    owner: root
+    group: www-data
+    mode: 0640
+  notify:
+   - reload Nginx
+
 # TODO indicate dependency on nginx role?
 # TODO factor out SSL block (into nginx role)?
 # TODO take care of dhparams.pem generation, when missing: openssl dhparam -out dhparams.pem 2048

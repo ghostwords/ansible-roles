@@ -1,4 +1,7 @@
 ---
+grafana_auth_basic_user_file: /etc/nginx/htpasswd
+grafana_auth_basic_user: admin
+grafana_auth_basic_password: admin
 grafana_security_admin_password: admin
 grafana_security_admin_user: admin
 grafana_security_secret_key: SW2YcwTIb9zpOOhoPsMm
