@@ -37,10 +37,24 @@
   notify:
    - reload Nginx
 
+# TODO factor out (into nginx role)
+- name: Generate a strong Diffie-Hellman group for Nginx
+  command: openssl dhparam -out /etc/nginx/dhparams.pem 2048
+    creates=/etc/nginx/dhparams.pem
+  notify: reload Nginx
+
+# TODO factor out (into nginx role)
+- name: Ensure appropriate DH group file ownership/permissions
+  file: path=/etc/nginx/dhparams.pem owner=root group=root mode=0640 state=file
+  notify: reload Nginx
+
+- name: Create self-signed SSL certificate
+  command: openssl req -new -newkey rsa:2048 -nodes -x509 -subj "/C=US/CN={{ grafana_server_domain }}" -days 365 -keyout {{ grafana_server_cert_key }} -out {{ grafana_server_cert_file }} -extensions v3_ca
+    creates={{ grafana_server_cert_file }}
+  notify: reload Nginx
+
 # TODO indicate dependency on nginx role?
 # TODO factor out SSL block (into nginx role)?
-# TODO take care of dhparams.pem generation, when missing: openssl dhparam -out dhparams.pem 2048
-# TODO take care of cert_file and cert_key generation, when missing
 - name: Copy Grafana Nginx config
   template:
     src: nginx.j2
