@@ -1,14 +1,18 @@
 #{{ ansible_managed }}
 
 search_index: /var/lib/graphite/index
+
 finders:
   - graphite_api.finders.whisper.WhisperFinder
+
 functions:
   - graphite_api.functions.SeriesFunctions
   - graphite_api.functions.PieFunctions
+
 whisper:
   directories:
     - /var/lib/graphite/whisper
+
 carbon:
   hosts:
     - 127.0.0.1:7002
@@ -16,3 +20,10 @@ carbon:
   retry_delay: 15
   carbon_prefix: carbon
   replication_factor: 1
+
+logging:
+  loggers:
+    graphite_api:
+      handlers:
+        - raw
+      level: INFO

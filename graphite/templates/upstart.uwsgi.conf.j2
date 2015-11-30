@@ -1,6 +1,6 @@
 #{{ ansible_managed }}
 
-description "graphite-api uWSGI server"
+description "Graphite-API uWSGI server"
 
 start on runlevel [2345]
 stop on runlevel [!2345]
@@ -17,6 +17,6 @@ exec /opt/graphite-api/bin/uwsgi \
 	--module graphite_api.app:app \
 	--master \
 	--processes 2 \
-	--logger-req file:/var/log/uwsgi/graphite-access.log \
+	--disable-logging \
 	--logger file:/var/log/uwsgi/graphite-error.log \
 	--die-on-term
