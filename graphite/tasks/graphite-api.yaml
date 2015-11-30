@@ -44,7 +44,7 @@
 - name: Copy Graphite-API Nginx config
   template: src=nginx.j2 dest=/etc/nginx/sites-available/graphite
   notify:
-   - reload Nginx
+   - test and reload Nginx
 
 - name: Activate Graphite-API Nginx config
   file:
@@ -52,16 +52,9 @@
     src: /etc/nginx/sites-available/graphite
     path: /etc/nginx/sites-enabled/graphite
   notify:
-   - reload Nginx
+   - test and reload Nginx
 
 - name: Copy Graphite-API config
   template: src=graphite-api.yaml.j2 dest=/etc/graphite-api.yaml
   notify:
    - restart uWSGI
-
-- name: Test Nginx configuration
-  shell: "nginx -t"
-  register: result
-  # TODO failed_when?
-  changed_when: "result.rc != 0"
-  always_run: yes

@@ -35,19 +35,19 @@
     group: www-data
     mode: 0640
   notify:
-   - reload Nginx
+   - test and reload Nginx
 
 - name: Create self-signed SSL certificate
   command: openssl req -new -newkey rsa:2048 -nodes -x509 -subj "/C=US/CN={{ grafana_server_domain }}" -days 365 -keyout {{ grafana_server_cert_key }} -out {{ grafana_server_cert_file }} -extensions v3_ca
     creates={{ grafana_server_cert_file }}
-  notify: reload Nginx
+  notify: test and reload Nginx
 
 - name: Copy Grafana Nginx config
   template:
     src: nginx.j2
     dest: /etc/nginx/sites-available/{{ grafana_server_domain }}
   notify:
-   - reload Nginx
+   - test and reload Nginx
 
 - name: Activate Grafana Nginx config
   file:
@@ -55,14 +55,7 @@
     src: /etc/nginx/sites-available/{{ grafana_server_domain }}
     path: /etc/nginx/sites-enabled/{{ grafana_server_domain }}
   notify:
-   - reload Nginx
-
-- name: Test Nginx configuration
-  shell: "nginx -t"
-  register: result
-  # TODO failed_when?
-  changed_when: "result.rc != 0"
-  always_run: yes
+   - test and reload Nginx
 
 - name: Configure Grafana to start at boot time
   service: name=grafana-server enabled=yes

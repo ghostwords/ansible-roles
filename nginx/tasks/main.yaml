@@ -6,30 +6,24 @@
 - name: Copy mime.types
   template: src=mime.types.j2 dest=/etc/nginx/mime.types.h5bp
   notify:
-   - reload Nginx
+   - test and reload Nginx
 
 - name: Copy Nginx base config
   template: src=nginx.conf.j2 dest=/etc/nginx/nginx.conf
+    validate="nginx -t -c %s"
   notify:
-   - reload Nginx
+   - test and reload Nginx
 
 - name: Copy Nginx SSL config
   template: src=ssl.conf.j2 dest=/etc/nginx/ssl.conf
   notify:
-   - reload Nginx
+   - test and reload Nginx
 
 - name: Generate a strong Diffie-Hellman group
   command: openssl dhparam -out /etc/nginx/dhparams.pem 2048
     creates=/etc/nginx/dhparams.pem
-  notify: reload Nginx
+  notify: test and reload Nginx
 
 - name: Ensure appropriate DH group file ownership/permissions
   file: path=/etc/nginx/dhparams.pem owner=root group=root mode=0640 state=file
-  notify: reload Nginx
-
-- name: Test Nginx configuration
-  shell: "nginx -t"
-  register: result
-  # TODO failed_when?
-  changed_when: "result.rc != 0"
-  always_run: yes
+  notify: test and reload Nginx
