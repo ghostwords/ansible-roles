@@ -33,8 +33,11 @@
   notify:
    - restart uWSGI
 
-- name: Ensure /var/log/uwsgi exists and belongs to www-data:adm
+- name: Ensure /var/log/uwsgi exists
   file: path=/var/log/uwsgi owner=www-data group=adm state=directory
+
+- name: Fix Graphite-API search index file permissions
+  file: path=/var/lib/graphite/index owner=www-data group=www-data state=touch
 
 - name: Copy uWSGI Upstart service config
   template: src=upstart.uwsgi.conf.j2 dest=/etc/init/uwsgi-graphite.conf
