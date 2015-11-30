@@ -1,0 +1,20 @@
+---
+
+- name: Install Whisper and Carbon
+  apt: name=graphite-carbon state=present
+
+- name: Copy Carbon configs
+  template: src={{ item }}.j2 dest=/etc/carbon/{{ item }}
+  with_items:
+    - carbon.conf
+    - storage-schemas.conf
+    - storage-aggregation.conf
+  notify:
+    - restart Carbon
+
+- name: Configure Carbon to start at boot time
+  copy:
+    dest: /etc/default/graphite-carbon
+    content: 'CARBON_CACHE_ENABLED=true'
+  notify:
+    - restart Carbon

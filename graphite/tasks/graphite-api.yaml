@@ -1,0 +1,67 @@
+---
+
+- name: Install Graphite-API dependencies
+  apt: name={{ item }} state=present
+  with_items:
+    - python3-dev
+    - build-essential
+    - libcairo2-dev
+    - libffi-dev
+    - python3-pip
+
+- name: Install virtualenv
+  pip: name=virtualenv state=present
+
+# TODO switch to virtualenv_python after ansible 2.0
+- name: Create the virtualenv
+  command: virtualenv /opt/graphite-api --no-site-packages -p /usr/bin/python3
+    creates=/opt/graphite-api/bin/activate
+
+- name: Install Graphite-API
+  pip:
+    executable: pip3
+    name: graphite-api
+    state: present
+    virtualenv: /opt/graphite-api
+
+- name: Install uWSGI
+  pip:
+    executable: pip3
+    name: uwsgi
+    state: present
+    virtualenv: /opt/graphite-api
+  notify:
+   - restart uWSGI
+
+- name: Ensure /var/log/uwsgi exists and belongs to www-data:adm
+  file: path=/var/log/uwsgi owner=www-data group=adm state=directory
+
+- name: Copy uWSGI Upstart service config
+  template: src=upstart.uwsgi.conf.j2 dest=/etc/init/uwsgi-graphite.conf
+  notify:
+   - restart uWSGI
+
+- name: Copy Graphite-API Nginx config
+  template: src=nginx.j2 dest=/etc/nginx/sites-available/graphite
+  notify:
+   - reload Nginx
+
+- name: Activate Graphite-API Nginx config
+  file:
+    state: link
+    src: /etc/nginx/sites-available/graphite
+    path: /etc/nginx/sites-enabled/graphite
+  notify:
+   - reload Nginx
+
+- name: Copy Graphite-API config
+  template: src=graphite-api.yaml.j2 dest=/etc/graphite-api.yaml
+  notify:
+   - restart uWSGI
+
+- name: Test Nginx configuration
+  shell: "nginx -t"
+  register: result
+  # TODO failed_when?
+  changed_when: "result.rc != 0"
+  always_run: yes

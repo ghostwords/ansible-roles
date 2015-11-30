@@ -1,0 +1,7 @@
+---
+
+- name: restart Carbon
+  service: name=carbon-cache state=restarted
+
+- name: restart uWSGI
+  service: name=uwsgi-graphite state=restarted

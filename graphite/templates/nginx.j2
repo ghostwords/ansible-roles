@@ -1,0 +1,12 @@
+#{{ ansible_managed }}
+
+server {
+	listen 127.0.0.1:8888;
+
+	access_log off;
+
+	location / {
+		include uwsgi_params;
+		uwsgi_pass unix:/tmp/uwsgi-graphite.sock;
+	}
+}

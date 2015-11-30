@@ -1,0 +1,22 @@
+#{{ ansible_managed }}
+
+description "graphite-api uWSGI server"
+
+start on runlevel [2345]
+stop on runlevel [!2345]
+
+setuid www-data
+setgid www-data
+
+exec /opt/graphite-api/bin/uwsgi \
+	--socket /tmp/uwsgi-graphite.sock \
+	--chmod-socket=660 \
+	--uid www-data \
+	--gid www-data \
+	--virtualenv /opt/graphite-api \
+	--module graphite_api.app:app \
+	--master \
+	--processes 2 \
+	--logger-req file:/var/log/uwsgi/graphite-access.log \
+	--logger file:/var/log/uwsgi/graphite-error.log \
+	--die-on-term
