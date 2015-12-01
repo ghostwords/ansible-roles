@@ -1058,9 +1058,10 @@ LoadPlugin write_graphite
 #</Plugin>
 
 <Plugin write_graphite>
-	<Node "default">
-		Host "localhost"
-		Port "2003"
+{% for node in collectd_plugin_write_graphite['nodes'] %}
+	<Node "{{ node['name'] }}">
+		Host "{{ node['host'] }}"
+		Port "{{ node['port'] }}"
 		Protocol "tcp"
 		LogSendErrors true
 		Prefix "collectd."
@@ -1069,6 +1070,7 @@ LoadPlugin write_graphite
 		AlwaysAppendDS false
 		EscapeCharacter "_"
 	</Node>
+{% endfor %}
 </Plugin>
 
 #<Plugin write_http>
