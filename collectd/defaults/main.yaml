@@ -2,5 +2,5 @@
 collectd_plugin_write_graphite:
   nodes:
     - name: default
-      host: localhost
+      host: 127.0.0.1
       port: 2003
