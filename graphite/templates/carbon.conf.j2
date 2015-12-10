@@ -62,8 +62,8 @@ MAX_UPDATES_PER_SECOND = 500
 # the files quickly but at the risk of slowing I/O down considerably for a while.
 MAX_CREATES_PER_MINUTE = 50
 
-LINE_RECEIVER_INTERFACE = 127.0.0.1
-LINE_RECEIVER_PORT = 2003
+LINE_RECEIVER_INTERFACE = {{ graphite_carbon_cache_line_receiver_interface }}
+LINE_RECEIVER_PORT = {{ graphite_carbon_cache_line_receiver_port }}
 
 # Set this to True to enable the UDP listener. By default this is off
 # because it is very common to run multiple carbon daemons and managing
