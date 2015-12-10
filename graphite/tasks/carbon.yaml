@@ -3,6 +3,17 @@
 - name: Install Whisper and Carbon
   apt: name=graphite-carbon state=present
 
+- name: Update firewall for Carbon
+  ufw:
+    rule: allow
+    direction: in
+    # TODO only when IP is private
+    interface: eth1
+    from_ip: "{{ item }}"
+    to_port: "{{ graphite_carbon_cache_line_receiver_port }}"
+    proto: tcp
+  with_items: "{{ graphite_carbon_ufw_allowed_hosts }}"
+
 - name: Copy Carbon configs
   template: src={{ item }}.j2 dest=/etc/carbon/{{ item }}
   with_items:

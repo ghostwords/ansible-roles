@@ -1,3 +1,4 @@
 ---
 graphite_carbon_cache_line_receiver_interface: 127.0.0.1
 graphite_carbon_cache_line_receiver_port: 2003
+graphite_carbon_ufw_allowed_hosts: []
