@@ -1,0 +1,31 @@
+---
+
+- name: Install OpenJDK 1.7
+  apt: name=openjdk-7-jre-headless state=present
+
+- name: Import Elasticsearch package signing key
+  apt_key:
+    url: https://packages.elastic.co/GPG-KEY-elasticsearch
+    state: present
+
+- name: Add Elasticsearch package repository
+  apt_repository:
+    repo: 'deb http://packages.elasticsearch.org/elasticsearch/{{ elasticsearch_version }}/debian stable main'
+    state: present
+
+- name: Install Elasticsearch
+  apt: name=elasticsearch state=present
+
+- name: Copy Elasticsearch config
+  template:
+    src: elasticsearch.yml.j2
+    dest: /etc/elasticsearch/elasticsearch.yml
+  notify:
+    - restart Elasticsearch
+
+- name: Copy Elasticsearch environment config
+  template:
+    src: elasticsearch.j2
+    dest: /etc/default/elasticsearch
+  notify:
+    - restart Elasticsearch
