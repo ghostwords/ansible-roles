@@ -29,3 +29,6 @@
     dest: /etc/default/elasticsearch
   notify:
     - restart Elasticsearch
+
+- name: Configure Elasticsearch to start at boot time
+  service: name=elasticsearch enabled=yes
