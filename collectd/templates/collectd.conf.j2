@@ -94,7 +94,7 @@ LoadPlugin df
 LoadPlugin disk
 #LoadPlugin dns
 #LoadPlugin email
-LoadPlugin entropy
+#LoadPlugin entropy
 #LoadPlugin ethstat
 #LoadPlugin exec
 #LoadPlugin filecount
@@ -105,7 +105,7 @@ LoadPlugin interface
 #LoadPlugin ipmi
 #LoadPlugin iptables
 #LoadPlugin ipvs
-LoadPlugin irq
+#LoadPlugin irq
 #LoadPlugin java
 #LoadPlugin libvirt
 LoadPlugin load
@@ -137,7 +137,7 @@ LoadPlugin memory
 #LoadPlugin ping
 #LoadPlugin postgresql
 #LoadPlugin powerdns
-LoadPlugin processes
+#LoadPlugin processes
 #LoadPlugin protocols
 #<LoadPlugin python>
 #	Globals true
@@ -159,7 +159,7 @@ LoadPlugin swap
 #LoadPlugin tokyotyrant
 #LoadPlugin unixsock
 #LoadPlugin uptime
-LoadPlugin users
+#LoadPlugin users
 #LoadPlugin uuid
 #LoadPlugin varnish
 #LoadPlugin vmem
@@ -392,7 +392,7 @@ LoadPlugin write_graphite
 	IgnoreSelected true
 
 #	ReportByDevice false
-#	ReportReserved false
+	ReportReserved true
 #	ReportInodes false
 
 #	ValuesAbsolute true
