@@ -1,4 +1,7 @@
 ---
+
+collectd_plugin_nginx: off
+
 collectd_plugin_write_graphite:
   nodes:
     - name: default

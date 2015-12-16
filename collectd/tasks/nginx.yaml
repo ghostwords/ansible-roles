@@ -1,0 +1,17 @@
+---
+
+- name: Install Nginx plugin dependencies
+  apt: name=libcurl3-gnutls state=present
+
+- name: Copy collectd Nginx config
+  template: src=nginx.j2 dest=/etc/nginx/sites-available/collectd
+  notify:
+    - test and reload Nginx
+
+- name: Activate collectd Nginx config
+  file:
+    state: link
+    src: /etc/nginx/sites-available/collectd
+    path: /etc/nginx/sites-enabled/collectd
+  notify:
+    - test and reload Nginx

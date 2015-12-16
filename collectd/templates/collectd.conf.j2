@@ -122,7 +122,11 @@ LoadPlugin memory
 #LoadPlugin netlink
 #LoadPlugin network
 #LoadPlugin nfs
-#LoadPlugin nginx
+
+{% if collectd_plugin_nginx %}
+LoadPlugin nginx
+{% endif %}
+
 #LoadPlugin notify_desktop
 #LoadPlugin notify_email
 #LoadPlugin ntpd
@@ -631,14 +635,17 @@ LoadPlugin write_graphite
 #	CacheFlush 1800
 #</Plugin>
 
-#<Plugin nginx>
-#	URL "http://localhost/status?auto"
+{% if collectd_plugin_nginx %}
+<Plugin nginx>
+	URL "http://127.0.0.1:8000/status"
 #	User "www-user"
 #	Password "secret"
 #	VerifyPeer false
 #	VerifyHost false
 #	CACert "/etc/ssl/ca.crt"
-#</Plugin>
+#	Timeout 10000
+</Plugin>
+{% endif %}
 
 #<Plugin notify_desktop>
 #	OkayTimeout 1000

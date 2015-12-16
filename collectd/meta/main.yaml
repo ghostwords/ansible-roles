@@ -1,0 +1,4 @@
+---
+dependencies:
+  - role: nginx
+    when: collectd_plugin_nginx
