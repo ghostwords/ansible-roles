@@ -1,7 +1,7 @@
 ---
 
 - name: Install Nginx
-  apt: name=nginx state=installed
+  apt: name=nginx state=present
 
 - name: Copy mime.types
   template: src=mime.types.j2 dest=/etc/nginx/mime.types.h5bp
