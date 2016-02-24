@@ -172,7 +172,11 @@ LoadPlugin nginx
 #LoadPlugin statsd
 LoadPlugin swap
 #LoadPlugin table
-#LoadPlugin tail
+
+{% if collectd_plugin_nginx %}
+LoadPlugin tail
+{% endif %}
+
 #LoadPlugin tail_csv
 #LoadPlugin tcpconns
 #LoadPlugin teamspeak2
@@ -1073,24 +1077,40 @@ LoadPlugin write_graphite
 #	</Table>
 #</Plugin>
 
-#<Plugin "tail">
-#	<File "/var/log/exim4/mainlog">
-#		Instance "exim"
-#		<Match>
-#			Regex "S=([1-9][0-9]*)"
-#			DSType "CounterAdd"
-#			Type "ipt_bytes"
-#			Instance "total"
-#		</Match>
-#		<Match>
-#			Regex "\\<R=local_user\\>"
-#			ExcludeRegex "\\<R=local_user\\>.*mail_spool defer"
-#			DSType "CounterInc"
-#			Type "counter"
-#			Instance "local_user"
-#		</Match>
-#	</File>
-#</Plugin>
+{% if collectd_plugin_nginx %}
+<Plugin tail>
+	<File "/var/log/nginx/access.log">
+		Instance "nginx"
+
+		{% for code in (
+			'200',
+			'206',
+			'301',
+			'302',
+			'304',
+			'400',
+			'401',
+			'403',
+			'404',
+			'405',
+			'408',
+			'416',
+			'499',
+			'500',
+			'502',
+			'503',
+			'504',
+		) -%}
+		<Match>
+			Regex "\" {{ code }} [0-9]+ \""
+			DSType "GaugeInc"
+			Type gauge
+			Instance "status_{{ code }}.count"
+		</Match>
+		{% endfor -%}
+	</File>
+</Plugin>
+{% endif %}
 
 #<Plugin tail_csv>
 #	<Metric "dropped">

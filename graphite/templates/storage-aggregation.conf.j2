@@ -28,6 +28,11 @@ pattern = \.count$
 xFilesFactor = 0
 aggregationMethod = sum
 
+[sum_collectd_workaround]
+pattern = _count$
+xFilesFactor = 0
+aggregationMethod = sum
+
 [default_average]
 pattern = .*
 xFilesFactor = 0.5
