@@ -1,5 +1,10 @@
 ---
 
+- name: Add "collectd 5.5 for LTS" package repository
+  apt_repository:
+    repo: 'ppa:collectd/collectd-5.5'
+    state: present
+
 - name: Install collectd
   apt: name=collectd state=present
 
