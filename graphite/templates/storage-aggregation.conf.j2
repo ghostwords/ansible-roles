@@ -23,6 +23,11 @@ pattern = \.max$
 xFilesFactor = 0.1
 aggregationMethod = max
 
+[max_collectd_workaround]
+pattern = _max$
+xFilesFactor = 0.1
+aggregationMethod = max
+
 [sum]
 pattern = \.count$
 xFilesFactor = 0
