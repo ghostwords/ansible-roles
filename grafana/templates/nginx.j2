@@ -5,8 +5,19 @@ server {
 	listen 80;
 	server_name {{ grafana_server_domain }};
 
-	# redirect non-SSL to SSL
-	return 301 https://{{ grafana_server_domain }}$request_uri;
+	# serve ACME challenge files over HTTP
+	location /.well-known/acme-challenge/ {
+		alias /var/www/challenges/.well-known/acme-challenge/;
+		try_files $uri @forward_https;
+	}
+
+	# redirect HTTP requests to HTTPS
+	location @forward_https {
+		return 301 https://{{ grafana_server_domain }}$request_uri;
+	}
+	location / {
+		return 301 https://{{ grafana_server_domain }}$request_uri;
+	}
 }
 
 server {
