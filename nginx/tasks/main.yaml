@@ -8,13 +8,13 @@
   notify:
    - test and reload Nginx
 
-- name: Copy Nginx base config
+- name: Copy base config file
   template: src=nginx.conf.j2 dest=/etc/nginx/nginx.conf
     validate="nginx -t -c %s"
   notify:
    - test and reload Nginx
 
-- name: Copy Nginx SSL config
+- name: Copy shared SSL config directives
   template: src=ssl.conf.j2 dest=/etc/nginx/ssl.conf
   notify:
    - test and reload Nginx
