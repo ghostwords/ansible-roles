@@ -1,0 +1,13 @@
+---
+
+- name: Install Memcached
+  apt: name=memcached state=installed
+
+- name: Install any additional required packages
+  apt: name={{ item }} state=installed
+  with_items: "{{ memcached_additional_dependencies }}"
+
+- name: Copy Memcached config
+  template: src=memcached.conf.j2 dest=/etc/memcached.conf
+  notify:
+    - restart Memcached

@@ -132,7 +132,11 @@ LoadPlugin load
 #LoadPlugin mbmon
 #LoadPlugin md
 #LoadPlugin memcachec
-#LoadPlugin memcached
+
+{% if collectd_plugin_memcached %}
+LoadPlugin memcached
+{% endif %}
+
 LoadPlugin memory
 #LoadPlugin modbus
 #LoadPlugin multimeter
@@ -627,14 +631,15 @@ LoadPlugin write_graphite
 #	</Page>
 #</Plugin>
 
-#<Plugin memcached>
-#	<Instance "local">
-#		Socket "/var/run/memcached.sock"
-# or:
-#		Host "127.0.0.1"
-#		Port "11211"
-#	</Instance>
-#</Plugin>
+{% if collectd_plugin_memcached %}
+<Plugin memcached>
+	<Instance "local">
+		Socket "/tmp/memcached.sock"
+		#Host "127.0.0.1"
+		#Port "11211"
+	</Instance>
+</Plugin>
+{% endif %}
 
 #<Plugin memory>
 #	ValuesAbsolute true

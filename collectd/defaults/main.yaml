@@ -1,5 +1,7 @@
 ---
 
+collectd_plugin_memcached: off
+
 collectd_plugin_nginx: off
 
 collectd_plugin_write_graphite:
