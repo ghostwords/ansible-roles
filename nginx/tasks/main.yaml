@@ -27,3 +27,18 @@
 - name: Ensure appropriate DH group file ownership/permissions
   file: path=/etc/nginx/dhparams.pem owner=root group=root mode=0640 state=file
   notify: test and reload Nginx
+
+- name: Copy default Nginx site config
+  template:
+    src: default.conf.j2
+    dest: /etc/nginx/sites-available/default
+  notify:
+   - test and reload Nginx
+
+- name: Activate default Nginx site config
+  file:
+    state: link
+    src: /etc/nginx/sites-available/default
+    path: /etc/nginx/sites-enabled/default
+  notify:
+   - test and reload Nginx
