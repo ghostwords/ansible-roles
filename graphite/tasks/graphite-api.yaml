@@ -19,14 +19,12 @@
 
 - name: Install Graphite-API
   pip:
-    executable: pip3
     name: graphite-api
     state: present
     virtualenv: /opt/graphite-api
 
 - name: Install uWSGI
   pip:
-    executable: pip3
     name: uwsgi
     state: present
     virtualenv: /opt/graphite-api
