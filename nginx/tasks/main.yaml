@@ -42,3 +42,13 @@
     path: /etc/nginx/sites-enabled/default
   notify:
    - test and reload Nginx
+
+- name: Allow passwordless Nginx config reloading
+  lineinfile:
+    dest: /etc/sudoers.d/{{ ansible_user|default(lookup("env", "USER")) }}
+    state: present
+    create: yes
+    line: '{{ ansible_user|default(lookup("env", "USER")) }}
+      ALL=(ALL) NOPASSWD: /usr/sbin/service nginx reload'
+    mode: 0440
+    validate: 'visudo -cf %s'
